@@ -1,0 +1,19 @@
+# Personal data: never commit
+data/
+*.db
+*.sqlite
+*.sqlite3
+google_credentials.json
+google_token.json
+gcal_state.json
+tests/eval_results.md
+tests/eval_run.log
+.env
+
+# Local machine files
+*.lnk
+.claude/
+__pycache__/
+*.pyc
+.venv/
+venv/
