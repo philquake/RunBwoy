@@ -53,8 +53,8 @@ It is built around a half marathon, four running days a week (Tue, Thu, Sat, Sun
 Requires Python 3.10 or newer.
 
 ```bash
-git clone <this-repo-url>
-cd run-coach
+git clone https://github.com/philquake/RunBwoy.git
+cd RunBwoy
 pip install -r requirements.txt
 python app.py --open
 ```
