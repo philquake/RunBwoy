@@ -10,7 +10,7 @@ import sqlite3
 import coach
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DB = os.path.join(BASE, "data", "runcoach.db")
+DB = os.path.join(os.environ.get("RUNCOACH_DATA") or os.path.join(BASE, "data"), "runcoach.db")
 EMBED_MODEL = os.environ.get("RUNCOACH_EMBED", "nomic-embed-text")
 
 

@@ -16,7 +16,7 @@ import gcal
 import knowledge
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(BASE, "data")
+DATA = os.environ.get("RUNCOACH_DATA") or os.path.join(BASE, "data")   # override to keep several datasets
 UPLOADS = os.path.join(DATA, "uploads")
 DB = os.path.join(DATA, "runcoach.db")
 os.makedirs(UPLOADS, exist_ok=True)
@@ -591,11 +591,12 @@ if __name__ == "__main__":
     import sys
     import threading
     import webbrowser
-    URL = "http://127.0.0.1:5000"
+    PORT = int(os.environ.get("RUNCOACH_PORT", 5000))
+    URL = f"http://127.0.0.1:{PORT}"
     if sys.stdout is None or sys.stderr is None:   # started with pythonw (no console): log to a file
         sys.stdout = sys.stderr = open(os.path.join(DATA, "server.log"), "a", buffering=1, encoding="utf-8")
     with socket.socket() as s:
-        already_running = s.connect_ex(("127.0.0.1", 5000)) == 0
+        already_running = s.connect_ex(("127.0.0.1", PORT)) == 0
     if "--open" in sys.argv:
         if already_running:        # second click on the taskbar icon: just show the page
             webbrowser.open(URL)
@@ -603,4 +604,4 @@ if __name__ == "__main__":
         threading.Timer(1.5, lambda: webbrowser.open(URL)).start()
     elif already_running:
         sys.exit("Run Coach is already running at " + URL)
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="127.0.0.1", port=PORT, debug=False)

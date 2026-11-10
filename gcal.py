@@ -4,7 +4,7 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 
-DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+DATA = os.environ.get("RUNCOACH_DATA") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 CREDS = os.path.join(DATA, "google_credentials.json")   # OAuth desktop client you download from Google Cloud
 TOKEN = os.path.join(DATA, "google_token.json")
 STATE = os.path.join(DATA, "gcal_state.json")
@@ -36,9 +36,6 @@ def to_ics(events, tz):
     now = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Run Coach//EN", "CALSCALE:GREGORIAN",
          f"X-WR-CALNAME:{CAL_NAME}", f"X-WR-TIMEZONE:{tz}"]
-    if tz == "America/Jamaica":
-        L += ["BEGIN:VTIMEZONE", "TZID:America/Jamaica", "BEGIN:STANDARD", "DTSTART:19700101T000000",
-              "TZOFFSETFROM:-0500", "TZOFFSETTO:-0500", "TZNAME:EST", "END:STANDARD", "END:VTIMEZONE"]
     for e in events:
         L += ["BEGIN:VEVENT", f"UID:{e['uid']}@runcoach.local", f"DTSTAMP:{now}",
               f"DTSTART;TZID={tz}:{e['start']:%Y%m%dT%H%M%S}", f"DTEND;TZID={tz}:{e['end']:%Y%m%dT%H%M%S}",

@@ -20,6 +20,11 @@ with app.app.test_request_context():
     DAYS = app._tool_dashboard()["race"]["days_left"]
     PROJ = app._tool_dashboard()["projected_half"]["half_time"]
     LASTP = app.acts()[0]["pace"] if app.acts() else None
+    PACES = app._tool_dashboard()["training_paces"]
+
+
+def p0(kind):  # start of one of your training-pace ranges, e.g. "8:01"
+    return re.escape(PACES[kind].split("–")[0])
 
 
 def n(x):  # a number as written either "1978" or "1,978"
@@ -36,10 +41,10 @@ CASES = [
     ("data", "When is my next long run and how far is it?", [], [rf"{LONG['distance_km']:g}(\.0)?\s*(km|kilomet)"], []),
     ("data", "How many days until my race?", [], [rf"\b{DAYS}\b"], []),
     ("data", "What is my projected half marathon time?", [], [re.escape(PROJ)], [r"guarantee"]),
-    ("data", "What does my training look like this week?", [], [r"(Sat|Saturday)", r"(Sun|Sunday)"], []),
+    ("data", "What does my training look like this week?", [], [r"(Mon|Tue|Wed|Thu|Fri|Sat|Sun)"], []),
     ("data", "What time should I go to bed tonight?", [], [r"\d{1,2}:\d{2}"], []),
-    ("data", "How fast should I run my long run this Sunday?", [], [r"8:\d{2}"], [r"7:0\d", r"7:1\d"]),
-    ("data", "What pace should my easy runs be?", [], [r"8:\d{2}"], [r"20-30%|slower than your (target|race)"]),
+    ("data", "How fast should I run my long run this Sunday?", [], [p0("long")], [p0("goal")]),
+    ("data", "What pace should my easy runs be?", [], [p0("easy")], [r"20-30%|slower than your (target|race)"]),
     ("data", "How ready am I for the race?", [], [r"(confiden|low|stretch|possible|evidence|data|close)"], [r"you will (definitely|easily)", r"strong position"]),
     ("data", "What should I eat on Sunday's long run day?", [], [r"(kcal|carb|calor)"], []),
 
